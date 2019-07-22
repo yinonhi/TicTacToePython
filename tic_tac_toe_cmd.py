@@ -4,24 +4,33 @@ import time
 move_list=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
 learn_list=['1','2','3','4','5','6','7','8','9']
 
+
 #clean screen
 def clean_scr():
     print('\n'*20)
 
-#function for print
-def p_screen(control_list):
+
+#function for print all the table
+def print_on_screen(control_list):
     counter=0
     for i in range (13):
         x=0
-        if i in (0,4,8,12):
+        if i ==0:
             print('-'*13)
+        elif i in (4,8,12):
+            print('-'*13)
+            counter+=3
         else:
-            for j in range(1):
-                if i%2==0 and counter!=9:
-                    print(f'| {control_list[counter]} | {control_list[counter+1]} | {control_list[counter+2]} |')
-                    counter+=3
-                else:
-                    print(f'|   |   |   |')
+            print_rows(control_list,i,counter)
+
+
+#function that print only the rows
+def print_rows(control_list,col,counter):
+    if col % 2 == 0 and counter != 9:
+        print(f'| {control_list[counter]} | {control_list[counter+1]} | {control_list[counter+2]} |')
+        counter += 3
+    else:
+        print(f'|   |   |   |')
 
 
 #function that enter the symbol to move list
@@ -105,43 +114,40 @@ def player_move(symbol,counter):
         player_move = int(input(f'enter where you want to put the {symbol}'))
         check = enter_symbol(player_move, symbol)
     clean_scr()
-    p_screen(move_list)
+    print_on_screen(move_list)
     player_one_win = check_win(move_list)
     if player_one_win == symbol:
         print(f'player {symbol} is the winner it took : {counter} turns')
         return symbol
     return None
 
+#function for choosing symbol
+def choose_symbol():
+    player_one_symbol=None
+    player_two_symbol = None
+    while player_one_symbol != 'X' and player_one_symbol != 'O':
+        player_one_symbol=input('choose your symbol :X or O the one with X is the first player').upper()
+        print(player_one_symbol)
+    if player_one_symbol=='X':
+        player_two_symbol='O'
+    elif player_one_symbol=='O':
+        player_two_symbol='X'
+    return (player_one_symbol,player_two_symbol)
+
 #the main function for 2 players
 def two_players():
     clean_scr()
-    player_one_symbol=input('choose your symbol :X or O the one with X is the first player').upper()
-    checker=None
-    if player_one_symbol=='X':
-        player_two_symbol='O'
-        checker=0
-    elif player_one_symbol=='O':
-        player_two_symbol='X'
-        checker=1
-    else:
-        print('you enter wrong symbol, the game exit')
-        return None
-    p_screen(move_list)
+    player_one_symbol,player_two_symbol=choose_symbol()
+    print_on_screen(move_list)
     i=0
     while not (board_full()):
         i += 1
         turn=None
-        if checker==0:
-            turn=player_move(player_one_symbol,i)
-        if checker==1:
-            turn=player_move(player_two_symbol, i)
+        turn=player_move(player_one_symbol,i)
         if ' ' not in move_list or turn!=None:
             break
         i+=1
-        if checker==1:
-            turn=player_move(player_one_symbol,i)
-        if checker==0:
-            turn=player_move(player_two_symbol, i)
+        turn=player_move(player_two_symbol, i)
         if ' ' not in move_list or turn!=None:
             break
     if(check_win(move_list) == None):
@@ -165,7 +171,6 @@ def computer_move(cp_sign,player_sign):
     for i in possible_moves:
         if i in [0,2,6,8]:
             corner_open.append(i)
-
     if len(corner_open)>0:
         move=select_random(corner_open)
         return move
@@ -191,17 +196,12 @@ def select_random(li):
 #the main function for player and computer
 def vs_computer():
     clean_scr()
-    player_symbol = input('choose your symbol :X or O the first player is the first one that play the game').upper()
+    player_symbol,computer_symbol=choose_symbol()
     checker=None
     if player_symbol == 'X':
-        computer_symbol= 'O'
         checker=0
     elif player_symbol == 'O':
-        computer_symbol = 'X'
         checker=1
-    else:
-        print('you enter wrong symbol, the game exit')
-        return None
     i=0
     while not (board_full()):
         i += 1
@@ -211,7 +211,7 @@ def vs_computer():
         if checker == 1:
             move = computer_move(computer_symbol, player_symbol)
             enter_symbol(move,computer_symbol)
-            p_screen(move_list)
+            print_on_screen(move_list)
             turn=check_win(move_list)
         if turn==computer_symbol:
             print("the computer WINS !!!!")
@@ -224,7 +224,7 @@ def vs_computer():
             move = computer_move(computer_symbol, player_symbol)
             enter_symbol(move,computer_symbol)
             turn=check_win(move_list)
-            p_screen(move_list)
+            print_on_screen(move_list)
         if turn==computer_symbol:
             print("the computer WINS !!!!")
         if ' ' not in move_list or turn != None:
@@ -235,16 +235,16 @@ def vs_computer():
 #the start explain of the game + choosing game
 def start_tictactoe_game():
     print('Hello this is tic tac toe game : below you will see the screen we will play with : ')
-    p_screen(move_list)
+    print_on_screen(move_list)
     time.sleep(3)
     clean_scr()
     print('now you will choose your moves with the number : 1-9 ,see the next table : ')
     time.sleep(1)
-    p_screen(learn_list)
+    print_on_screen(learn_list)
     time.sleep(3)
     answer=input('so are you ready to play ? press yes or no')
     if(answer.lower()=='yes'):
-        decision = input('you want to play 2 friends ? or computer ? Press f for friend or c for computer')
+        decision = input('you want to play 2 friends ? or computer ? Press f for friend or c for computer').lower()
         if(decision.lower()=='f'):
             two_players()
         else:
