@@ -28,7 +28,6 @@ def print_on_screen(control_list):
 def print_rows(control_list,col,counter):
     if col % 2 == 0 and counter != 9:
         print(f'| {control_list[counter]} | {control_list[counter+1]} | {control_list[counter+2]} |')
-        counter += 3
     else:
         print(f'|   |   |   |')
 
