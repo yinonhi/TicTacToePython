@@ -1,4 +1,7 @@
 import time
+from colorama import init
+init()
+from colorama import Fore
 
 #define the x\o table by list
 move_list=[' ',' ',' ',' ',' ',' ',' ',' ',' ']
@@ -18,7 +21,7 @@ def print_on_screen(control_list):
         if i ==0:
             print('-'*13)
         elif i in (4,8,12):
-            print('-'*13)
+            print(Fore.BLUE + '-'*13)
             counter+=3
         else:
             print_rows(control_list,i,counter)
@@ -27,9 +30,10 @@ def print_on_screen(control_list):
 #function that print only the rows
 def print_rows(control_list,col,counter):
     if col % 2 == 0 and counter != 9:
-        print(f'| {control_list[counter]} | {control_list[counter+1]} | {control_list[counter+2]} |')
+        print(Fore.BLUE + f'| {control_list[counter]} | {control_list[counter+1]} | {control_list[counter+2]} |')
+        counter += 3
     else:
-        print(f'|   |   |   |')
+        print(Fore.BLUE + f'|   |   |   |')
 
 
 #function that enter the symbol to move list
